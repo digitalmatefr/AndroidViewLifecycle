@@ -41,7 +41,8 @@ view.lifecycle.addObserver(onResume = {
 
 - Invoke the given actions once, when the view is at least at a state
 
-If the view is already created the action will be performed immediately, otherwise the action will be performed after the view is next created
+If the view is already resumed the action will be performed immediately, otherwise the action will be performed after the view is next resumed
+In all the cases, your action will be invoked only one time.
 
 ```kotlin
 view.doOnResume {
