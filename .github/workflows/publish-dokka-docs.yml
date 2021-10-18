@@ -26,3 +26,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           destination_dir: docs
+          publish_dir: ./android-view-lifecycle/build/dokka/html
+          full_commit_message: Dokka docs
