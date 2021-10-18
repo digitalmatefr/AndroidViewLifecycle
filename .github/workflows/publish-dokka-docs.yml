@@ -1,4 +1,4 @@
-name: Publish Dokka doc
+name: Publish Dokka docs
 
 on:
   release:
@@ -20,7 +20,7 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
       - name: Generate Dokka HTML docs
-        run: ./gradlew dokkaHtmlMultimodule
+        run: ./gradlew dokkaHtml
       - name: Deploy to GitHub pages
         uses: peaceiris/actions-gh-pages@v3
         with:
