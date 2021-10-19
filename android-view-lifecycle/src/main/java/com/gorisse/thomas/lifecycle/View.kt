@@ -16,7 +16,7 @@ import kotlinx.coroutines.*
  * This may be used to scope work or heavyweight resources associated with the view
  * that may span cycles of the view becoming detached and reattached from a window.
  */
-var View.lifecycleOwner: LifecycleOwner
+val View.lifecycleOwner: LifecycleOwner
     get() = getTag(R.id.view_lifecycle_owner) as? LifecycleOwner ?: object : LifecycleOwner,
         LifecycleEventObserver {
         private val lifecycle = LifecycleRegistry(this)
@@ -39,10 +39,7 @@ var View.lifecycleOwner: LifecycleOwner
             return lifecycle
         }
     }.also {
-        lifecycleOwner = it
-    }
-    private set(value) {
-        setTag(R.id.view_lifecycle_owner, value)
+        setTag(R.id.view_lifecycle_owner, it)
     }
 
 /**
