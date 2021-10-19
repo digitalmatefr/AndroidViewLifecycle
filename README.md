@@ -29,7 +29,7 @@ imageView.lifecycleScope.launchWhenCreated {
 ```
 
 ### View Lifecycle
-Listen or execute when a View lifecycle state occured
+Listen or execute when a View lifecycle state occurred
 
 - Invoke the given action every time the view becomes resumed
 
@@ -50,7 +50,7 @@ view.doOnResume {
 }
 ```
 
-Perform the given action when this view is destoyed.
+Perform the given action when this view is destroyed.
 
 ```kotlin
 view.doOnDestroy {
