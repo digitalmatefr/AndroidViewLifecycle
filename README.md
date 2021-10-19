@@ -47,11 +47,14 @@ In all the cases, your action will be invoked only one time.
 
 ```kotlin
 view.doOnResume {
-    animate(view)
+    startWelcomeAnimation(view)
+}
+view.doOnPause {
+    stopWelcomeAnimation(view)
 }
 ```
 
-Perform the given action when this view is destroyed.
+Perform the given action when this view is destroyed:
 
 ```kotlin
 view.doOnDestroy {
@@ -81,7 +84,7 @@ texView.lifecycleScope.launchWhenCreated { // Launch on Dispatchers.Main
 
 The returned Job will be cancelled when the View is destroyed.
 
-= *When the view is detached or the Fragment or FragmentActivity container is destroyed, `updateTime(textView)` is not called anymore.*
+= *When the view is detached or the Fragment or FragmentActivity container is destroyed, the while loop stops.*
 
 ```kotlin
 textView.lifecycleScope.launchWhenCreated {
