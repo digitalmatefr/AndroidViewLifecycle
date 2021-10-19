@@ -50,7 +50,8 @@ view.doOnPause {
     stopWelcomeAnimation(view)
 }
 ```
-* = If the view is already resumed the action will be performed immediately, otherwise the action will be performed after the view is next resumed
+
+= *If the view is already resumed the action will be performed immediately, otherwise the action will be performed after the view is next resumed
 In all the cases, your action will be invoked only one time.*
 
 - Perform an action when the view is destroyed:
@@ -74,6 +75,7 @@ texView.lifecycleScope.launchWhenCreated { // Launch on Dispatchers.Main
     texView.text = data // Dispatchers.Main for UI change
 }
 ```
+
 = *When the view is detached or the Fragment or FragmentActivity container is destroyed, if `loadNetworkData()` is not finished, the network call is cancelled.*
 
 - Launch a repeating call and auto cancel it when the view is destroyed (**TimerTask Coroutine equivalent**). The returned Job will be cancelled when the view is destroyed.
@@ -88,5 +90,5 @@ textView.lifecycleScope.launchWhenCreated {
     }
 }
 ```
-* = When the view is detached or the Fragment or FragmentActivity container is destroyed, the while loop stops.*
+= *When the view is detached or the Fragment or FragmentActivity container is destroyed, the while loop stops.*
 
