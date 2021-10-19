@@ -24,7 +24,8 @@ val lifecycle = findViewById(R.id.frameLayout).lifecycle
 ```kotlin
 val imageView = ImageView(context)
 imageView.lifecycleScope.launchWhenCreated {
-    loadSlideShow(imageView.getWidth(), imageView.getHeight())
+    (imageView.parent as View).isVisible = true
+     loadSlideShow(imageView.width, imageView.height)
 }
 ```
 
