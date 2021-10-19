@@ -32,7 +32,7 @@ imageView.lifecycleScope.launchWhenCreated {
 ### View Lifecycle
 Listen or execute when a View lifecycle state occurred
 
-- Invoke the given action every time the view becomes resumed
+- Invoke an action every time the view becomes resumed
 
 ```kotlin
 view.lifecycle.addObserver(onResume = {
@@ -40,10 +40,7 @@ view.lifecycle.addObserver(onResume = {
 })
 ```
 
-- Invoke the given actions once, when the view is at least at a state
-
-If the view is already resumed the action will be performed immediately, otherwise the action will be performed after the view is next resumed
-In all the cases, your action will be invoked only one time.
+- Invoke actions once, when the view is at least at a state
 
 ```kotlin
 view.doOnResume {
@@ -53,8 +50,10 @@ view.doOnPause {
     stopWelcomeAnimation(view)
 }
 ```
+* = If the view is already resumed the action will be performed immediately, otherwise the action will be performed after the view is next resumed
+In all the cases, your action will be invoked only one time.*
 
-Perform the given action when this view is destroyed:
+- Perform an action when the view is destroyed:
 
 ```kotlin
 view.doOnDestroy {
@@ -65,11 +64,7 @@ view.doOnDestroy {
 ### View LifecycleScope
 Launch a coroutine and auto cancel it when the view sate is destroyed
 
-- Launches and runs the given block when the view Lifecycle state is at least resumed.
-
-The returned Job will be cancelled when the View is destroyed.
-
-= *When the view is detached or the Fragment or FragmentActivity container is destroyed, if `loadNetworkData()` is not finished, the network call is cancelled.*
+- Launches and runs the given block when the view Lifecycle state is at least resumed. The returned Job will be cancelled when the view is destroyed.
 
 ```kotlin
 texView.lifecycleScope.launchWhenCreated { // Launch on Dispatchers.Main
@@ -79,12 +74,9 @@ texView.lifecycleScope.launchWhenCreated { // Launch on Dispatchers.Main
     texView.text = data // Dispatchers.Main for UI change
 }
 ```
+= *When the view is detached or the Fragment or FragmentActivity container is destroyed, if `loadNetworkData()` is not finished, the network call is cancelled.*
 
-- Launch a repeating call and auto cancel it when the view is destroyed (**TimerTask Coroutine equivalent**)
-
-The returned Job will be cancelled when the View is destroyed.
-
-= *When the view is detached or the Fragment or FragmentActivity container is destroyed, the while loop stops.*
+- Launch a repeating call and auto cancel it when the view is destroyed (**TimerTask Coroutine equivalent**). The returned Job will be cancelled when the view is destroyed.
 
 ```kotlin
 textView.lifecycleScope.launchWhenCreated {
@@ -96,5 +88,5 @@ textView.lifecycleScope.launchWhenCreated {
     }
 }
 ```
-
+* = When the view is detached or the Fragment or FragmentActivity container is destroyed, the while loop stops.*
 
