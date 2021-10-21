@@ -98,18 +98,8 @@ suspend fun <T> View.whenResumed(block: suspend CoroutineScope.() -> T): T =
  *
  * The action will only be invoked once, and any listeners will then be removed.
  */
-inline fun View.doOnCreate(crossinline action: (view: View) -> Unit) {
-    if (lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) {
-        action(this)
-    } else {
-        lifecycle.addObserver(object : DefaultLifecycleObserver {
-            override fun onCreate(owner: LifecycleOwner) {
-                lifecycle.removeObserver(this)
-                action(this@doOnCreate)
-            }
-        })
-    }
-}
+inline fun View.doOnCreate(crossinline action: (view: View) -> Unit) =
+    lifecycle.doOnCreate { action(this) }
 
 /**
  * Performs the given action when this view is started. If the view is already started the action
@@ -118,18 +108,8 @@ inline fun View.doOnCreate(crossinline action: (view: View) -> Unit) {
  *
  * The action will only be invoked once, and any listeners will then be removed.
  */
-inline fun View.doOnStart(crossinline action: (view: View) -> Unit) {
-    if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
-        action(this)
-    } else {
-        lifecycle.addObserver(object : DefaultLifecycleObserver {
-            override fun onStart(owner: LifecycleOwner) {
-                lifecycle.removeObserver(this)
-                action(this@doOnStart)
-            }
-        })
-    }
-}
+inline fun View.doOnStart(crossinline action: (view: View) -> Unit) =
+    lifecycle.doOnStart { action(this) }
 
 /**
  * Performs the given action when this view is resumed. If the view is already resumed the action
@@ -138,18 +118,8 @@ inline fun View.doOnStart(crossinline action: (view: View) -> Unit) {
  *
  * The action will only be invoked once, and any listeners will then be removed.
  */
-inline fun View.doOnResume(crossinline action: (view: View) -> Unit) {
-    if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
-        action(this)
-    } else {
-        lifecycle.addObserver(object : DefaultLifecycleObserver {
-            override fun onResume(owner: LifecycleOwner) {
-                lifecycle.removeObserver(this)
-                action(this@doOnResume)
-            }
-        })
-    }
-}
+inline fun View.doOnResume(crossinline action: (view: View) -> Unit) =
+    lifecycle.doOnResume { action(this) }
 
 /**
  * Performs the given action when this view is paused. The action will be performed after the view
@@ -157,14 +127,8 @@ inline fun View.doOnResume(crossinline action: (view: View) -> Unit) {
  *
  * The action will only be invoked once, and any listeners will then be removed.
  */
-inline fun View.doOnPause(crossinline action: (view: View) -> Unit) {
-    lifecycle.addObserver(object : DefaultLifecycleObserver {
-        override fun onPause(owner: LifecycleOwner) {
-            lifecycle.removeObserver(this)
-            action(this@doOnPause)
-        }
-    })
-}
+inline fun View.doOnPause(crossinline action: (view: View) -> Unit) =
+    lifecycle.doOnPause { action(this) }
 
 /**
  * Performs the given action when this view is stopped. The action will be performed after the view
@@ -172,14 +136,8 @@ inline fun View.doOnPause(crossinline action: (view: View) -> Unit) {
  *
  * The action will only be invoked once, and any listeners will then be removed.
  */
-inline fun View.doOnStop(crossinline action: (view: View) -> Unit) {
-    lifecycle.addObserver(object : DefaultLifecycleObserver {
-        override fun onStop(owner: LifecycleOwner) {
-            lifecycle.removeObserver(this)
-            action(this@doOnStop)
-        }
-    })
-}
+inline fun View.doOnStop(crossinline action: (view: View) -> Unit) =
+    lifecycle.doOnStop { action(this) }
 
 /**
  * Performs the given action when this view is destroyed. The action will be performed after the view
@@ -187,14 +145,8 @@ inline fun View.doOnStop(crossinline action: (view: View) -> Unit) {
  *
  * The action will only be invoked once, and any listeners will then be removed.
  */
-inline fun View.doOnDestroy(crossinline action: (view: View) -> Unit) {
-    lifecycle.addObserver(object : DefaultLifecycleObserver {
-        override fun onDestroy(owner: LifecycleOwner) {
-            lifecycle.removeObserver(this)
-            action(this@doOnDestroy)
-        }
-    })
-}
+inline fun View.doOnDestroy(crossinline action: (view: View) -> Unit) =
+    lifecycle.doOnDestroy { action(this) }
 
 /**
  * ### Adds a LifecycleObserver that will be notified when the LifecycleOwner changes state
@@ -219,37 +171,11 @@ inline fun View.doOnDestroy(crossinline action: (view: View) -> Unit) {
  * This method will be called before the {@link LifecycleOwner}'s {@code onDestroy} method
  * is called.
  */
-fun Lifecycle.addObserver(
+fun View.observe(
     onCreate: ((owner: LifecycleOwner) -> Unit)? = null,
     onStart: ((owner: LifecycleOwner) -> Unit)? = null,
     onResume: ((owner: LifecycleOwner) -> Unit)? = null,
     onPause: ((owner: LifecycleOwner) -> Unit)? = null,
     onStop: ((owner: LifecycleOwner) -> Unit)? = null,
     onDestroy: ((owner: LifecycleOwner) -> Unit)? = null
-) {
-    addObserver(object : DefaultLifecycleObserver {
-        override fun onCreate(owner: LifecycleOwner) {
-            onCreate?.invoke(owner)
-        }
-
-        override fun onStart(owner: LifecycleOwner) {
-            onStart?.invoke(owner)
-        }
-
-        override fun onResume(owner: LifecycleOwner) {
-            onResume?.invoke(owner)
-        }
-
-        override fun onPause(owner: LifecycleOwner) {
-            onPause?.invoke(owner)
-        }
-
-        override fun onStop(owner: LifecycleOwner) {
-            onStop?.invoke(owner)
-        }
-
-        override fun onDestroy(owner: LifecycleOwner) {
-            onDestroy?.invoke(owner)
-        }
-    })
-}
+) = lifecycle.observe(onCreate, onStart, onResume, onPause, onStop, onDestroy)
