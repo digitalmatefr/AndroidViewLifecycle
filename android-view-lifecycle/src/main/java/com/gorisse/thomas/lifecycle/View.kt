@@ -1,8 +1,14 @@
 package com.gorisse.thomas.lifecycle
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import android.view.View
+import androidx.activity.ComponentActivity
 import androidx.core.view.doOnAttach
 import androidx.core.view.doOnDetach
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.findFragment
 import androidx.lifecycle.*
 import kotlinx.coroutines.*
 
@@ -23,7 +29,13 @@ val View.lifecycleOwner: LifecycleOwner
 
         init {
             doOnAttach {
-                findViewTreeLifecycleOwner()?.lifecycle?.addObserver(this)
+                lifecycle.currentState = Lifecycle.State.CREATED
+                findViewTreeLifecycleOwner()?.lifecycle?.let { viewTreeLifecycle->
+                    viewTreeLifecycle.addObserver(this)
+                    if(lifecycle.currentState != viewTreeLifecycle.currentState) {
+                        lifecycle.currentState = viewTreeLifecycle.currentState
+                    }
+                }
             }
             doOnDetach {
                 findViewTreeLifecycleOwner()?.lifecycle?.removeObserver(this)
@@ -90,6 +102,41 @@ suspend fun <T> View.whenStarted(block: suspend CoroutineScope.() -> T): T =
  */
 suspend fun <T> View.whenResumed(block: suspend CoroutineScope.() -> T): T =
     lifecycleOwner.whenResumed(block)
+
+
+/**
+ * Performs the given action when this view is attached to a fragment. If the view is already
+ * attached to a fragment, the action will be performed immediately, otherwise the action will be
+ * performed after the view is next attached to a fragment.
+ *
+ * The action will only be invoked once, and any listeners will then be removed.
+ */
+inline fun View.doOnFragmentAttach(crossinline action: (fragment: Fragment) -> Unit) =
+    doOnAttach {
+        try {
+            action(findFragment())
+        } catch (e: Exception) {
+        }
+    }
+
+/**
+ * Performs the given action when this view is attached to an Activity. If the view is already
+ * attached to an Activity, the action will be performed immediately, otherwise the action will be
+ * performed after the view is next attached to an Activity.
+ *
+ * The action will only be invoked once, and any listeners will then be removed.
+ */
+inline fun View.doOnActivityAttach(crossinline action: (activity: Activity) -> Unit) =
+    doOnAttach {
+        try {
+            action(findFragment<Fragment>().requireActivity())
+        } catch (e: Exception) {
+            context.getActivity()?.let { action(it) }
+        }
+    }
+
+fun Context.getActivity(): ComponentActivity? = this as? ComponentActivity
+    ?: (this as? ContextWrapper)?.baseContext?.getActivity()
 
 /**
  * Performs the given action when this view is created. If the view is already created the action
