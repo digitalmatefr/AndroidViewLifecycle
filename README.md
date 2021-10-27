@@ -8,7 +8,7 @@ Extensions for Android View class that let you access a view lifecycle without h
 *app/build.gradle*
 ```gradle
 dependencies {
-    implementation "com.gorisse.thomas:android-view-lifecycle:1.0.1"
+    implementation "com.gorisse.thomas:android-view-lifecycle:1.0.3"
 }
 ```
 
