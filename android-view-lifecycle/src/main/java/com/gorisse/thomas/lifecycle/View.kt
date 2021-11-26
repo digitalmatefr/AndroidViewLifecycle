@@ -25,10 +25,13 @@ import kotlinx.coroutines.*
 val View.lifecycleOwner: LifecycleOwner
     get() = getTag(R.id.view_lifecycle_owner) as? LifecycleOwner ?: object : LifecycleOwner,
         LifecycleEventObserver {
-        private val lifecycle = LifecycleRegistry(this)
+        private var lifecycle = LifecycleRegistry(this)
 
         init {
             doOnAttach {
+                if(lifecycle.currentState == Lifecycle.State.DESTROYED) {
+                    lifecycle = LifecycleRegistry(this)
+                }
                 lifecycle.currentState = Lifecycle.State.CREATED
                 findViewTreeLifecycleOwner()?.lifecycle?.let { viewTreeLifecycle->
                     viewTreeLifecycle.addObserver(this)
@@ -39,7 +42,9 @@ val View.lifecycleOwner: LifecycleOwner
             }
             doOnDetach {
                 findViewTreeLifecycleOwner()?.lifecycle?.removeObserver(this)
-                lifecycle.currentState = Lifecycle.State.DESTROYED
+                if(lifecycle.currentState != Lifecycle.State.DESTROYED) {
+                    lifecycle.currentState = Lifecycle.State.DESTROYED
+                }
             }
         }
 
