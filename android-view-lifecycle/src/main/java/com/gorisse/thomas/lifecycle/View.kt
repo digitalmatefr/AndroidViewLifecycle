@@ -39,11 +39,11 @@ val View.lifecycleOwner: LifecycleOwner
                         lifecycle.currentState = viewTreeLifecycle.currentState
                     }
                 }
-            }
-            doOnDetach {
-                findViewTreeLifecycleOwner()?.lifecycle?.removeObserver(this)
-                if(lifecycle.currentState != Lifecycle.State.DESTROYED) {
-                    lifecycle.currentState = Lifecycle.State.DESTROYED
+                doOnDetach {
+                    findViewTreeLifecycleOwner()?.lifecycle?.removeObserver(this)
+                    if(lifecycle.currentState != Lifecycle.State.DESTROYED) {
+                        lifecycle.currentState = Lifecycle.State.DESTROYED
+                    }
                 }
             }
         }
