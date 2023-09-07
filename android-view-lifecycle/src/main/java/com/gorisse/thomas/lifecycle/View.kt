@@ -25,7 +25,7 @@ import kotlinx.coroutines.*
 val View.lifecycleOwner: LifecycleOwner
     get() = getTag(R.id.view_lifecycle_owner) as? LifecycleOwner ?: object : LifecycleOwner,
         LifecycleEventObserver {
-        private var lifecycle = LifecycleRegistry(this)
+        override var lifecycle = LifecycleRegistry(this)
 
         init {
             doOnAttach {
@@ -52,9 +52,9 @@ val View.lifecycleOwner: LifecycleOwner
             lifecycle.currentState = event.targetState
         }
 
-        override fun getLifecycle(): Lifecycle {
-            return lifecycle
-        }
+//        fun getLifecycle(): Lifecycle {
+//            return lifecycle
+//        }
     }.also {
         setTag(R.id.view_lifecycle_owner, it)
     }
